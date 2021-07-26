@@ -77,6 +77,11 @@
      extraGroups = [ "wheel" "dialout" ]; 
   };
 
+  nixpkgs.config.permittedInsecurePackages = [
+	"ffmpeg-3.4.8"
+  ]; # For processing  
+
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
@@ -87,6 +92,7 @@
      firefox dropbox gimp inkscape dosbox
      jdk11
      sublime
+     libusb # for Digispark
   ];
 
   programs.steam.enable = true;
