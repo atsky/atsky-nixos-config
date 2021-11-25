@@ -11,8 +11,11 @@
     ];
 
   # Use the systemd-boot EFI boot loader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = false;
+  boot.loader = {
+    systemd-boot.enable = true;
+    efi.canTouchEfiVariables = false;
+    grub.configurationLimit = 16;
+  };
 
   networking.hostName = "atsky-nixos"; # Define your hostname.
   #networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -42,14 +45,14 @@
   services.xserver = {
     enable = true;
     displayManager = {
-      gdm.enable = true;
+      gdm.enable = false;
       autoLogin.enable = true;
       autoLogin.user = "atsky";
       defaultSession = "gnome";
     };
     
     #desktopManager.plasma5.enable = true;
-    desktopManager.gnome3.enable = true;
+    desktopManager.gnome.enable = true;
     #desktopManager.xfce.enable = true;
     videoDrivers = [ "nvidia" ];
   };
@@ -62,10 +65,10 @@
   # services.xserver.xkbOptions = "eurosign:e";
 
   # Enable CUPS to print documents.
-  # services.printing.enable = true;
+  services.printing.enable = true;
 
   # Enable sound.
-  # sound.enable = true;
+  sound.enable = true;
   # hardware.pulseaudio.enable = true;
 
   # Enable touchpad support (enabled default in most desktopManager).
@@ -86,7 +89,8 @@
   # $ nix search wget
   environment.systemPackages = with pkgs; [
      wget vim git mc htop pciutils usbutils glxinfo 
-     unrar
+     hfsprogs exfatprogs gparted
+     unrar p7zip
      python3 jupyter
      cudatoolkit
      firefox dropbox gimp inkscape dosbox
@@ -119,9 +123,11 @@
   # networking.firewall.enable = false;
   
   # Virtualbox
-  virtualisation.virtualbox.host.enable = true;
   users.extraGroups.vboxusers.members = [ "atsky" ];
-  virtualisation.virtualbox.host.enableExtensionPack = true;
+  virtualisation.virtualbox.host = {
+	enable = true;
+	enableExtensionPack = true;
+  };
   
   fonts.fonts = with pkgs; [
     source-code-pro    
