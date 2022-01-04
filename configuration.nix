@@ -94,8 +94,10 @@
      python3 jupyter
      cudatoolkit
      firefox dropbox gimp inkscape dosbox
-     jdk11
+     jdk jdk8
      sublime
+     ghc
+     tdesktop
      libusb # for Digispark
   ];
 
@@ -125,7 +127,7 @@
   # Virtualbox
   users.extraGroups.vboxusers.members = [ "atsky" ];
   virtualisation.virtualbox.host = {
-	enable = true;
+        enable = false;
 	enableExtensionPack = true;
   };
   
