@@ -1,14 +1,11 @@
 with import <nixos> {};
 
 with pkgs; (buildFHSUserEnv {
-  name = "rust";
+  name = "java";
   targetPkgs = pkgs: with pkgs; [
-    jetbrains.clion
-    rustc
-    cargo
-    clang
-    rustup
-    vscode
+    jdk
+    jdk11
+    jetbrains.idea-community
   ];
   runScript = "bash";
 }).env

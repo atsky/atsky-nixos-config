@@ -1,4 +1,12 @@
-{ pkgs ? import <nixpkgs> {} }:
+{ pkgs ? import <nixpkgs> 
+    {
+        config =
+        {
+            allowUnfree = true;
+            cudaSupport = true;
+        };
+    }
+}:
 let
   my-python = pkgs.python39;
   python-with-my-packages = my-python.withPackages (p: with p; [
@@ -17,7 +25,6 @@ let
     sly
     tinydb
     dill
-    pydub
     pygame
     # moviepy
     pip     

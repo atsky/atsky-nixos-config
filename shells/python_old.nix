@@ -1,4 +1,5 @@
 { pkgs ? import <nixpkgs> {} }:
+
 let
   my-python = pkgs.python39;
   python-with-my-packages = my-python.withPackages (p: with p; [
@@ -17,26 +18,22 @@ let
     sly
     tinydb
     dill
-    pydub
     pygame
     # moviepy
-    pip     
+    pip
+    virtualenv  
     statsmodels
   ]);
-in pkgs.mkShell {
-  buildInputs = with pkgs; [
+in with pkgs; (buildFHSUserEnv {
+  name = "python";
+  targetPkgs = pkgs: with pkgs; [
     python-with-my-packages
     jetbrains.pycharm-community
+    jetbrains.idea-ultimate
     jetbrains.pycharm-professional
+    # nodePackages.npm
+    nodejs         
   ];
-  
-  shellHook = ''
-    # Tells pip to put packages into $PIP_PREFIX instead of the usual locations.
-    # See https://pip.pypa.io/en/stable/user_guide/#environment-variables.
-    export PIP_PREFIX=$(pwd)/_build/pip_packages
-    export PYTHONPATH="$PIP_PREFIX/${pkgs.python3.sitePackages}:$PYTHONPATH"
-    export PATH="$PIP_PREFIX/bin:$PATH"
-    unset SOURCE_DATE_EPOCH
-  '';
-}
+  runScript = "bash";
+}).env
 

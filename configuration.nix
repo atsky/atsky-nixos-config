@@ -4,7 +4,11 @@
 
 { config, pkgs, ... }:
 
-{
+
+# Here goes some basic flags
+let
+  use_virtualbox = true;
+in {
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
@@ -77,31 +81,44 @@
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.atsky = {
      isNormalUser = true;
-     extraGroups = [ "wheel" "dialout" ]; 
+     extraGroups = [ "wheel" "dialout" "docker"]; 
+     shell = pkgs.fish;
   };
 
   nixpkgs.config.permittedInsecurePackages = [
 	"ffmpeg-3.4.8"
   ]; # For processing  
 
+  virtualisation.docker.enable = true;
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
      wget vim git mc htop pciutils usbutils glxinfo 
+     fish zsh
+     bitwarden bitwarden-cli
+     wireguard-tools
+     lsof
      hfsprogs exfatprogs gparted
      unrar p7zip
-     python3 jupyter
-     cudatoolkit
-     firefox dropbox gimp inkscape dosbox
-     jdk jdk8
+     gnumake gcc
+     firefox dropbox gimp inkscape dosbox yandex-disk
+     jdk 
      sublime
      ghc
      tdesktop
+     docker
+     # Programming
+     python3 jupyter
+     cudatoolkit
+     obsidian
      libusb # for Digispark
+     # Latex
+     texlive.combined.scheme-full texmaker
   ];
 
   programs.steam.enable = true;
+  programs.fish.enable = true;
  
   nixpkgs.config.allowUnfree = true;
 
@@ -116,7 +133,7 @@
   # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
+  services.openssh.enable = true;
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
@@ -127,7 +144,7 @@
   # Virtualbox
   users.extraGroups.vboxusers.members = [ "atsky" ];
   virtualisation.virtualbox.host = {
-        enable = false;
+        enable = use_virtualbox;
 	enableExtensionPack = true;
   };
   
@@ -139,8 +156,9 @@
     dina-font
     proggyfonts
   ];
-
-
+  
+  
+  
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
   # on your system were taken. It‘s perfectly fine and recommended to leave
